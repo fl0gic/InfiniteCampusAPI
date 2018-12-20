@@ -1,4 +1,22 @@
-bin
-.project
+
+## Eclipse
 .classpath
+.project
+.settings/
+## Intellij
+.idea/
+*.iml
+*.iws
+/out/
+#3 Mac
+.DS_Store
+# Maven
+log/
+target/
+dependency-reduced-pom.xml
+## I dont want it
+bin/
+src/test/
+logs/
 grades.txt
+src/main/resources/
