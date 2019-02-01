@@ -1,30 +1,33 @@
 package me.caden2k3.infinitecampusapi.classbook;
 
+import lombok.Getter;
+import lombok.Setter;
 import nu.xom.Element;
 
 import java.util.ArrayList;
 
+@Getter @Setter
 public class ClassbookGroup {
-    public String activityID;
-    public String name;
-    public float weight;
-    public int seq;
-    public boolean notGraded = false;
+    private String activityID;
+    private String name;
+    private float weight;
+    private int seq;
+    private boolean notGraded = false;
     //hidePortal
     //hasValidScore
     //composite
-    //calcEclude
-    public int termID;
-    public int taskID;
-    public float percentage;
-    public String formattedPercentage;
-    public String letterGrade;
-    public float pointsEarned;
-    public float totalPointsPossible;
+    //calcExclude
+    private int termID;
+    private int taskID;
+    private float percentage;
+    private String formattedPercentage;
+    private String letterGrade;
+    private float pointsEarned;
+    private float totalPointsPossible;
 
-    public ArrayList<ClassbookActivity> activities = new ArrayList<ClassbookActivity>();
+    private ArrayList<ClassbookActivity> activities = new ArrayList<ClassbookActivity>();
 
-    public ClassbookGroup(Element group) {
+    ClassbookGroup(Element group) {
         activityID = group.getAttributeValue("activityID");
         name = group.getAttributeValue("name");
         weight = Float.parseFloat(group.getAttributeValue("weight"));

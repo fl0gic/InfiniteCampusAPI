@@ -1,31 +1,34 @@
 package me.caden2k3.infinitecampusapi.calendar;
 
+import lombok.Getter;
+import lombok.Setter;
 import nu.xom.Element;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+@Getter @Setter
 public class ScheduleStructure {
-    public String id;
-    public String name;
-    public String label;
-    public String grade;
-    public boolean active;
-    public String primary;
-    public boolean is_default;
-    public Date startDate;
+    private String id;
+    private String name;
+    private String label;
+    private String grade;
+    private boolean active;
+    private String primary;
+    private boolean is_default;
+    private Date startDate;
 
-    public ScheduleStructure(Element sceduleElement) {
-        id = sceduleElement.getAttributeValue("structureID");
-        name = sceduleElement.getAttributeValue("structureName");
-        label = sceduleElement.getAttributeValue("label");
-        grade = sceduleElement.getAttributeValue("grade");
-        active = sceduleElement.getAttributeValue("active").equalsIgnoreCase("true");
-        primary = sceduleElement.getAttributeValue("primary");
-        is_default = sceduleElement.getAttributeValue("default").equalsIgnoreCase("true");
+    ScheduleStructure(Element scheduleElement) {
+        id = scheduleElement.getAttributeValue("structureID");
+        name = scheduleElement.getAttributeValue("structureName");
+        label = scheduleElement.getAttributeValue("label");
+        grade = scheduleElement.getAttributeValue("grade");
+        active = scheduleElement.getAttributeValue("active").equalsIgnoreCase("true");
+        primary = scheduleElement.getAttributeValue("primary");
+        is_default = scheduleElement.getAttributeValue("default").equalsIgnoreCase("true");
         try {
-            startDate = new SimpleDateFormat("MM/dd/yy", Locale.ENGLISH).parse(sceduleElement.getAttributeValue("startDate"));
+            startDate = new SimpleDateFormat("MM/dd/yy", Locale.ENGLISH).parse(scheduleElement.getAttributeValue("startDate"));
         } catch (Exception e) {
             startDate = new Date();
         }

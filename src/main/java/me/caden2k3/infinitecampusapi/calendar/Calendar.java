@@ -1,16 +1,19 @@
 package me.caden2k3.infinitecampusapi.calendar;
 
+import lombok.Getter;
+import lombok.Setter;
 import nu.xom.Element;
 
 import java.util.ArrayList;
 
+@Getter @Setter
 public class Calendar {
-    public String name;
-    public String schoolID;
+    private String name;
+    private String schoolID;
     public String calendarID;
-    public String endYear;
+    private String endYear;
 
-    public ArrayList<ScheduleStructure> schedules = new ArrayList<ScheduleStructure>();
+    public ArrayList<ScheduleStructure> schedules = new ArrayList<>();
 
     public Calendar(Element calendar) {
         name = calendar.getAttributeValue("calendarName");

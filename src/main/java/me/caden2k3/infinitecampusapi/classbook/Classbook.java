@@ -1,18 +1,20 @@
 package me.caden2k3.infinitecampusapi.classbook;
 
+import lombok.Getter;
+import lombok.Setter;
 import nu.xom.Element;
 
 import java.util.ArrayList;
 
+@Getter @Setter
 public class Classbook {
-    public String termName;
-    public String courseNumber;
-    public String courseName;
-    public String sectionNumber;
-    public String teacherDisplay;
+    private String termName;
+    private String courseNumber;
+    private String courseName;
+    private String sectionNumber;
+    private String teacherDisplay;
 
-    public ArrayList<Curve> curves = new ArrayList<Curve>();
-    public ArrayList<ClassbookTask> tasks = new ArrayList<ClassbookTask>();
+    private ArrayList<ClassbookTask> tasks = new ArrayList<>();
 
     public Classbook(Element classbook) {
         termName = classbook.getAttributeValue("termName");
@@ -23,14 +25,16 @@ public class Classbook {
 
         for (int i = 0; i < classbook.getFirstChildElement("tasks").getChildElements("ClassbookTask").size(); i++)
             tasks.add(new ClassbookTask(classbook.getFirstChildElement("tasks").getChildElements("ClassbookTask").get(i)));
+
+        ArrayList<Curve> curves = new ArrayList<>();
         for (int i = 0; i < classbook.getFirstChildElement("curves").getChildElements("Curve").size(); i++)
             curves.add(new Curve(classbook.getFirstChildElement("curves").getChildElements("Curve").get(i)));
     }
 
     public String getInfoString() {
-        String str = "\nTasks for " + courseName + ", with teacher " + teacherDisplay + " and class ID " + courseNumber + ", " + termName;
+        StringBuilder str = new StringBuilder("\nTasks for " + courseName + ", with teacher " + teacherDisplay + " and class ID " + courseNumber + ", " + termName);
         for (ClassbookTask t : tasks)
-            str += "\n" + t.getInfoString();
-        return str;
+            str.append("\n").append(t.getInfoString());
+        return str.toString();
     }
 }

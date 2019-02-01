@@ -68,5 +68,11 @@
             <artifactId>xom</artifactId>
             <version>1.2.5</version>
         </dependency>
+        <!--Lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.2</version>
+        </dependency>
     </dependencies>
 </project>

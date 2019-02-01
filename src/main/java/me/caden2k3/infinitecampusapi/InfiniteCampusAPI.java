@@ -30,7 +30,7 @@ public class InfiniteCampusAPI {
         CoreManager core = new CoreManager(districtCode);
         print("Found District Information:");
         print("District: " + core.getDistrictInfo().getDistrictName());
-        print("State: " + core.getDistrictInfo().getDistrictStateCode());
+        print("State: " + core.getDistrictInfo().getStateCode());
         print("Base URL: " + core.getDistrictInfo().getDistrictBaseURL());
         print("District App Name: " + core.getDistrictInfo().getDistrictAppName());
 
@@ -59,8 +59,8 @@ public class InfiniteCampusAPI {
         print("\n");
         print(user.getInfoString());
 
-        URL infoURL2 = new URL(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.personID + "&structureID=" + user.calendars.get(0).schedules.get(0).id + "&calendarID=" + user.calendars.get(0).calendarID);
-        print(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.personID + "&structureID=" + user.calendars.get(0).schedules.get(0).id + "&calendarID=" + user.calendars.get(0).calendarID);
+        URL infoURL2 = new URL(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.personID + "&structureID=" + user.calendars.get(0).schedules.get(0).getId() + "&calendarID=" + user.calendars.get(0).calendarID);
+        print(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.personID + "&structureID=" + user.calendars.get(0).schedules.get(0).getId() + "&calendarID=" + user.calendars.get(0).calendarID);
         Document doc2 = builder.build(new ByteArrayInputStream(core.getContent(infoURL2, false).getBytes()));
         ClassbookManager manager = new ClassbookManager(doc2.getRootElement().getFirstChildElement("SectionClassbooks"));
         print(manager.getInfoString());

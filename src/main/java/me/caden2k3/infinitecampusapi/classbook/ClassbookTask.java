@@ -1,34 +1,36 @@
 package me.caden2k3.infinitecampusapi.classbook;
 
+import lombok.Getter;
+import lombok.Setter;
 import nu.xom.Element;
 
 import java.util.ArrayList;
 
+@Getter @Setter
 public class ClassbookTask {
-    public String taskID;
-    public String name;
-    public float weight;
-    public boolean isWeighted = false;
+    private String taskID;
+    private String name;
+    private float weight;
+    private boolean isWeighted = false;
     // hasValidGroup
     // hasValidWeightedGroup
     // locked
-    public boolean gradeBookPosted = false;
-    public int taskSeq;
-    public int termID;
-    public String termName;
-    public int termSeq;
-    public float totalPointsPossible;
-    public float pointsEarned;
-    public float percentage;
-    public String letterGrade;
-    public String formattedPercentage;
-    public int curveID;
+    private boolean gradeBookPosted = false;
+    private int taskSeq;
+    private int termID;
+    private String termName;
+    private int termSeq;
+    private float totalPointsPossible;
+    private float pointsEarned;
+    private float percentage;
+    private String letterGrade;
+    private String formattedPercentage;
+    private int curveID;
 
-    public ArrayList<ClassbookTask> tasks = new ArrayList<ClassbookTask>();
-    public ArrayList<ClassbookGroup> groups = new ArrayList<ClassbookGroup>();
+    private ArrayList<ClassbookTask> tasks = new ArrayList<>();
+    private ArrayList<ClassbookGroup> groups = new ArrayList<>();
 
-    public ClassbookTask(Element task) {
-
+    ClassbookTask(Element task) {
         name = task.getAttributeValue("name");
         taskID = task.getAttributeValue("taskID");
         weight = Float.parseFloat(task.getAttributeValue("weight"));
@@ -47,16 +49,14 @@ public class ClassbookTask {
         try {
             for (int i = 0; i < task.getFirstChildElement("groups").getChildElements("ClassbookGroup").size(); i++)
                 groups.add(new ClassbookGroup(task.getFirstChildElement("groups").getChildElements("ClassbookGroup").get(i)));
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) { }
 
         try {
             curveID = Integer.parseInt(task.getAttributeValue("curveID"));
 
             for (int i = 0; i < task.getFirstChildElement("tasks").getChildElements("ClassbookTask").size(); i++)
                 tasks.add(new ClassbookTask(task.getFirstChildElement("tasks").getChildElements("ClassbookTask").get(i)));
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) { }
 
         letterGrade = (letterGrade == null ? "?" : letterGrade);
         formattedPercentage = (formattedPercentage == null ? "?" : formattedPercentage);
