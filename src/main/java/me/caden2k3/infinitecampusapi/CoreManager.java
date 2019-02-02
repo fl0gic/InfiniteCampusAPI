@@ -1,6 +1,7 @@
 package me.caden2k3.infinitecampusapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import me.caden2k3.infinitecampusapi.district.DistrictInfo;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -10,27 +11,24 @@ import java.net.URL;
 import java.util.List;
 
 public class CoreManager {
-    private ObjectMapper mapper = new ObjectMapper();
     private String cookies = "";
-    private DistrictInfo distInfo;
+    @Getter private DistrictInfo districtInfo;
     private String districtCode;
 
     public CoreManager(String districtCode) {
         this.districtCode = districtCode;
         try {
-            distInfo = mapper.readValue(new URL("https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode=" + districtCode), DistrictInfo.class);
+            ObjectMapper mapper = new ObjectMapper();
+            districtInfo = mapper.readValue(new URL("https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode=" + districtCode), DistrictInfo.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public DistrictInfo getDistrictInfo() {
-        return distInfo;
-    }
-
     public boolean attemptLogin(String user, String pass, DistrictInfo distInfo) {
         try {
             URL loginURL = new URL(distInfo.getDistrictBaseURL() + "/verify.jsp?nonBrowser=true&username=" + user + "&password=" + pass + "&appName=" + distInfo.getDistrictAppName());
+            System.out.println("LOGIN URL = "+loginURL.toExternalForm());
             String response = getContent(loginURL, true);
             if (response.trim().equalsIgnoreCase("<authentication>success</authentication>"))
                 return true;
@@ -40,38 +38,38 @@ public class CoreManager {
         return false;
     }
 
-    public String getContent(URL url, boolean altercookies) {
-        String s = "";
+    public String getContent(URL url, boolean alterCookies) {
+        StringBuilder s = new StringBuilder();
         try {
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-            con.setRequestProperty("Cookie", cookies); //Retain our sessoin
+            con.setRequestProperty("Cookie", cookies); //Retain our session
             BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String input;
             while ((input = br.readLine()) != null) {
-                s += input + "\n";
+                s.append(input).append("\n");
             }
             br.close();
 
             StringBuilder sb = new StringBuilder();
 
             // find the cookies in the response header from the first request
-            List<String> cookie = con.getHeaderFields().get("Set-Cookie");
-            if (cookie != null) {
-                for (String cooki : cookie) {
+            List<String> cookieList = con.getHeaderFields().get("Set-Cookie");
+            if (cookieList != null) {
+                for (String currentCookie : cookieList) {
                     if (sb.length() > 0) {
                         sb.append("; ");
                     }
 
                     // only want the first part of the cookie header that has the value
-                    String value = cooki.split(";")[0];
+                    String value = currentCookie.split(";")[0];
                     sb.append(value);
                 }
             }
-            if (altercookies)
+            if (alterCookies)
                 cookies = sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return s;
+        return s.toString();
     }
 }

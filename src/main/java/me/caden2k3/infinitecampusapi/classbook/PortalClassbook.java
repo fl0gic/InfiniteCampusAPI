@@ -11,21 +11,22 @@ import java.util.ArrayList;
 @Getter @Setter
 public class PortalClassbook {
     private String sectionID;
-    private ArrayList<Student> students = new ArrayList<Student>();
+    private ArrayList<Student> students = new ArrayList<>();
 
     PortalClassbook(Element classbookElement) {
         this.sectionID = classbookElement.getAttributeValue("sectionID");
-        Elements e = classbookElement.getFirstChildElement("ClassbookDetail").getFirstChildElement("StudentList").getChildElements("Student");
-        for (int i = 0; i < e.size(); i++)
-            students.add(new Student(e.get(i)));
+        Elements elements = classbookElement.getFirstChildElement("ClassbookDetail").getFirstChildElement("StudentList").getChildElements("Student");
+        for (int i = 0; i < elements.size(); i++)
+            students.add(new Student(elements.get(i)));
     }
 
     public String getInfoString() {
-        String str = "";
-        for (Student s : students)
-            for (Classbook c : s.classbooks) {
-                str += c.getInfoString();
-            }
-        return str;
+        StringBuilder infoString = new StringBuilder();
+
+        for (Student student : students) {
+            for (Classbook classbook : student.getClassbooks())
+                infoString.append(classbook.getInfoString());
+        }
+        return infoString.toString();
     }
 }

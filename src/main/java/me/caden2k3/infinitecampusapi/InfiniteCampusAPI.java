@@ -59,8 +59,8 @@ public class InfiniteCampusAPI {
         print("\n");
         print(user.getInfoString());
 
-        URL infoURL2 = new URL(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.personID + "&structureID=" + user.calendars.get(0).schedules.get(0).getId() + "&calendarID=" + user.calendars.get(0).calendarID);
-        print(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.personID + "&structureID=" + user.calendars.get(0).schedules.get(0).getId() + "&calendarID=" + user.calendars.get(0).calendarID);
+        URL infoURL2 = new URL(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.getPersonID() + "&structureID=" + user.getCalendars().get(0).getSchedules().get(0).getId() + "&calendarID=" + user.getCalendars().get(0).getCalendarID());
+        print(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.getPersonID() + "&structureID=" + user.getCalendars().get(0).getSchedules().get(0).getId() + "&calendarID=" + user.getCalendars().get(0).getCalendarID());
         Document doc2 = builder.build(new ByteArrayInputStream(core.getContent(infoURL2, false).getBytes()));
         ClassbookManager manager = new ClassbookManager(doc2.getRootElement().getFirstChildElement("SectionClassbooks"));
         print(manager.getInfoString());

@@ -25,10 +25,6 @@ public class Classbook {
 
         for (int i = 0; i < classbook.getFirstChildElement("tasks").getChildElements("ClassbookTask").size(); i++)
             tasks.add(new ClassbookTask(classbook.getFirstChildElement("tasks").getChildElements("ClassbookTask").get(i)));
-
-        ArrayList<Curve> curves = new ArrayList<>();
-        for (int i = 0; i < classbook.getFirstChildElement("curves").getChildElements("Curve").size(); i++)
-            curves.add(new Curve(classbook.getFirstChildElement("curves").getChildElements("Curve").get(i)));
     }
 
     public String getInfoString() {
