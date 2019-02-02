@@ -4,6 +4,5 @@
 
 ## Info
 
-Currently being rewritten since InfiniteCampus has switched to a different backend, I have no idea if it is more or less complicated than the previous version.
-
-Also note that I'm working on improving on this project as a whole with unit testing and major refactoring.
+Currently in the process of optimizing and refactoring the API, as well as adding
+support for more features of InfiniteCampus, like district searching.
