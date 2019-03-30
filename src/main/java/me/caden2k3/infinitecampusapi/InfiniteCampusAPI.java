@@ -27,7 +27,7 @@ public class InfiniteCampusAPI {
         System.out.println("Please enter your district code:");
         String districtCode = main.getInput();
 
-        CoreManager core = new CoreManager(districtCode);
+        InfiniteCampus core = new InfiniteCampus(districtCode);
         print("Found District Information:");
         print("District: " + core.getDistrictInfo().getDistrictName());
         print("State: " + core.getDistrictInfo().getStateCode());
