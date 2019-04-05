@@ -52,8 +52,6 @@ import java.util.ArrayList;
                 .getFirstChildElement("PortalOutline")
                 .getFirstChildElement("Family")
                 .getFirstChildElement("Student");
-        System.out.println(studentElement.toXML());
-        System.out.println("Student number = "+studentElement.getAttributeValue("studentNumber"));
 
         studentNumber = studentElement.getAttributeValue("studentNumber");
         personID = studentElement.getAttributeValue("personID");
