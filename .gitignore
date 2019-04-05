@@ -16,7 +16,7 @@ target/
 dependency-reduced-pom.xml
 ## I dont want it
 bin/
-src/test/
 logs/
 grades.txt
 src/main/resources/
+/src/test/resources/test-credentials.txt

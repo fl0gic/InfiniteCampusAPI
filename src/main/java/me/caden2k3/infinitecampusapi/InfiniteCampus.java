@@ -25,10 +25,9 @@ public class InfiniteCampus {
         }
     }
 
-    public boolean attemptLogin(String user, String pass, DistrictInfo distInfo) {
+    public boolean attemptLogin(String user, String pass) {
         try {
-            URL loginURL = new URL(distInfo.getDistrictBaseURL() + "/verify.jsp?nonBrowser=true&username=" + user + "&password=" + pass + "&appName=" + distInfo.getDistrictAppName());
-            System.out.println("LOGIN URL = "+loginURL.toExternalForm());
+            URL loginURL = new URL(districtInfo.getDistrictBaseURL() + "/verify.jsp?nonBrowser=true&username=" + user + "&password=" + pass + "&appName=" + districtInfo.getDistrictAppName());
             String response = getContent(loginURL, true);
             if (response.trim().equalsIgnoreCase("<authentication>success</authentication>"))
                 return true;

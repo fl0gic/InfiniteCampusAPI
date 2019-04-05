@@ -1,15 +1,17 @@
 package me.caden2k3.infinitecampusapi;
 
-import me.caden2k3.infinitecampusapi.classbook.ClassbookManager;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
+import lombok.Getter;
 
 import java.io.*;
-import java.net.URL;
 
 public class InfiniteCampusAPI {
-    static PrintWriter out;
+    private static PrintWriter out;
+
+    @Getter private InfiniteCampusAPI instance;
+
+    public InfiniteCampusAPI() {
+        instance = this;
+    }
 
     public static void main(String[] args) throws Exception {
         InfiniteCampusAPI main = new InfiniteCampusAPI();
@@ -43,27 +45,22 @@ public class InfiniteCampusAPI {
         System.out.println(passwordString);
 
         print("Logging into user " + username + "...");
-        boolean successfulLogin = core.attemptLogin(username, passwordString, core.getDistrictInfo());
+        boolean successfulLogin = core.attemptLogin(username, passwordString);
         print(successfulLogin ? "Login success!" : "Login failed!");
         if (!successfulLogin) {
             print("\nPress any key to exit...");
             System.in.read();
             return;
         }
-
-        URL infoURL = new URL(core.getDistrictInfo().getDistrictBaseURL() + "/prism?x=portal.PortalOutline&appName=" + core.getDistrictInfo().getDistrictAppName());
-        Builder builder = new Builder();
-        Document doc = builder.build(new ByteArrayInputStream(core.getContent(infoURL, false).getBytes()));
-        Element root = doc.getRootElement();
-        Student user = new Student(root.getFirstChildElement("PortalOutline").getFirstChildElement("Family").getFirstChildElement("Student"), core.getDistrictInfo());
         print("\n");
-        print(user.getInfoString());
 
-        URL infoURL2 = new URL(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.getPersonID() + "&structureID=" + user.getCalendars().get(0).getSchedules().get(0).getId() + "&calendarID=" + user.getCalendars().get(0).getCalendarID());
-        print(core.getDistrictInfo().getDistrictBaseURL() + "/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID=" + user.getPersonID() + "&structureID=" + user.getCalendars().get(0).getSchedules().get(0).getId() + "&calendarID=" + user.getCalendars().get(0).getCalendarID());
-        Document doc2 = builder.build(new ByteArrayInputStream(core.getContent(infoURL2, false).getBytes()));
-        ClassbookManager manager = new ClassbookManager(doc2.getRootElement().getFirstChildElement("SectionClassbooks"));
-        print(manager.getInfoString());
+        Student student = new Student(username, passwordString, core);
+        print(student.getInfoString());
+
+        print("\n");
+
+        print(student.getClassbookManager().getInfoString());
+
         out.close();
 
         print("\nUser info dump successful!\nPress any key to exit...");
