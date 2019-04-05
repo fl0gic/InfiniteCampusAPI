@@ -45,7 +45,7 @@ public class InfiniteCampusAPI {
         System.out.println(passwordString);
 
         print("Logging into user " + username + "...");
-        boolean successfulLogin = core.attemptLogin(username, passwordString);
+        boolean successfulLogin = core.checkCredentials(username, passwordString);
         print(successfulLogin ? "Login success!" : "Login failed!");
         if (!successfulLogin) {
             print("\nPress any key to exit...");

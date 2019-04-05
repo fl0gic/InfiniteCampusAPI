@@ -35,6 +35,12 @@ public class ScheduleStructure {
     }
 
     public String getInfoString() {
-        return "Information for Schedule \'" + name + "\' titled \'" + label + "\':\nGrade: " + grade + "\nID: " + id + "\nIs Active? " + active + "\nPrimary: " + primary + "\nIs Default? " + is_default + "\nEnding Date: " + startDate.toString();
+        return "Information for Schedule \'" + name + "\' titled \'" + label + "\':" +
+                "\nGrade: " + grade +
+                "\nID: " + id +
+                "\nIs Active? " + active +
+                "\nPrimary: " + primary +
+                "\nIs Default? " + is_default +
+                "\nEnding Date: " + startDate.toString();
     }
 }

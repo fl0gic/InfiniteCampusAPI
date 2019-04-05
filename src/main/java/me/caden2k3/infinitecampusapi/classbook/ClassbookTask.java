@@ -63,11 +63,11 @@ public class ClassbookTask {
     }
 
     public String getInfoString() {
-        String str = "Task: " + name + ", " + termName + " " + letterGrade + " " + formattedPercentage + "%";
+        StringBuilder str = new StringBuilder("Task: " + name + ", " + termName + " " + letterGrade + " " + formattedPercentage + "%");
         for (ClassbookTask t : tasks)
-            str += "\n\t" + t.getInfoString().replace("\n", "\n\t");
+            str.append("\n\t").append(t.getInfoString().replace("\n", "\n\t"));
         for (ClassbookGroup b : groups)
-            str += "\n\t" + b.getInfoString().replace("\n", "\n\t");
-        return str;
+            str.append("\n\t").append(b.getInfoString().replace("\n", "\n\t"));
+        return str.toString();
     }
 }

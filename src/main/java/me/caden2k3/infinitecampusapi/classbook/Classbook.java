@@ -29,6 +29,7 @@ public class Classbook {
 
     public String getInfoString() {
         StringBuilder str = new StringBuilder("\nTasks for " + courseName + ", with teacher " + teacherDisplay + " and class ID " + courseNumber + ", " + termName);
+
         for (ClassbookTask t : tasks)
             str.append("\n").append(t.getInfoString());
         return str.toString();

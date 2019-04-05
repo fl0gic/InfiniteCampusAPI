@@ -25,11 +25,16 @@ public class Calendar {
     }
 
     public String getInfoString() {
-        String returnString = "Information for Calendar \'" + name + "\':\nSchool ID: " + schoolID + "\nCalendar ID: " + calendarID + "\nEnding Year: " + endYear + "\n\n===Schedules===";
+        StringBuilder builder = new StringBuilder(
+                "Information for Calendar \'" + name + "\':" +
+                        "\nSchool ID: " + schoolID +
+                        "\nCalendar ID: " + calendarID +
+                        "\nEnding Year: " + endYear +
+                        "\n\n===Schedules===");
 
-        for (ScheduleStructure s : schedules)
-            returnString += "\n" + s.getInfoString();
+        for (ScheduleStructure structure : schedules)
+            builder.append("\n").append(structure.getInfoString());
 
-        return returnString;
+        return builder.toString();
     }
 }

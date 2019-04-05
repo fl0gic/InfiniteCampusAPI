@@ -40,7 +40,7 @@ import java.util.ArrayList;
         distInfo = core.getDistrictInfo();
 
         //Ensure valid credentials.
-        if (!core.attemptLogin(username, password))
+        if (!core.checkCredentials(username, password))
             throw new InvalidCredentialsException();
 
         Builder builder = new Builder();
