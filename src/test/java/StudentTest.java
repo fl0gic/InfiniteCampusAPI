@@ -36,14 +36,6 @@ public class StudentTest {
         final InfiniteCampus core = new InfiniteCampus(districtCode);
         final Student student = new Student(username, password, core);
 
-        System.out.println("Found District Information:");
-        System.out.println("District: " + core.getDistrictInfo().getDistrictName());
-        System.out.println("State: " + core.getDistrictInfo().getStateCode());
-        System.out.println("Base URL: " + core.getDistrictInfo().getDistrictBaseURL());
-        System.out.println("District App Name: " + core.getDistrictInfo().getDistrictAppName());
-
-        System.out.println(student.getInfoString());
-
         Assert.assertTrue(student.getCalendars() != null);
         Assert.assertTrue(student.getClassbooks() != null);
         Assert.assertTrue(student.getPrimaryCalendar() != null);
