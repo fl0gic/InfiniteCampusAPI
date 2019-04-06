@@ -1,6 +1,8 @@
 package me.caden2k3.infinitecampusapi;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Cleanup;
 import lombok.Getter;
 import me.caden2k3.infinitecampusapi.district.DistrictInfo;
 import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
@@ -10,17 +12,49 @@ import nu.xom.Element;
 import nu.xom.ParsingException;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class InfiniteCampus {
     private String cookies = "";
-    @Getter private DistrictInfo districtInfo;
     private String districtCode;
+    @Getter private DistrictInfo districtInfo;
+
+    /**
+     * Queries Infinite Campus for districts.
+     *
+     * @param districtName The name (or part of the name) of the district.
+     * @param stateCode The two letter code of the district's state.
+     * @return A list of districts returned by the query.
+     * @throws IOException Upon malformed URL.
+     */
+    public static List<DistrictInfo> searchDistricts(String districtName, String stateCode) throws IOException {
+        ArrayList<DistrictInfo> districts = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+
+        districtName = districtName.replace(" ", "%20");
+
+        String jsonReturn = readFrom("https://mobile.infinitecampus.com/mobile/searchDistrict?query=" + districtName + "&state=" + stateCode);
+        Map<String,List<Map>> dataMap = mapper.readValue(jsonReturn, new TypeReference<Map<String,List<Map>>>(){});
+
+        for (Map infoMap : dataMap.get("data")) {
+            DistrictInfo info = new DistrictInfo();
+            info.setId((Integer) infoMap.get("id"));
+            info.setDistrictName((String) infoMap.get("district_name"));
+            info.setDistrictAppName((String) infoMap.get("district_app_name"));
+            info.setDistrictBaseURL((String) infoMap.get("district_baseurl"));
+            info.setDistrictCode((String) infoMap.get("district_code"));
+            info.setStateCode((String) infoMap.get("state_code"));
+
+            districts.add(info);
+        }
+
+        return districts;
+    }
 
     public InfiniteCampus(String districtCode) {
         this.districtCode = districtCode;
@@ -58,6 +92,18 @@ public class InfiniteCampus {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private static String readFrom(String url) throws IOException {
+        @Cleanup InputStream is = new URL(url).openStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
     }
 
     public String getContent(URL url, boolean alterCookies) throws IOException {

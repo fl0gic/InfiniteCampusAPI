@@ -1,13 +1,12 @@
 package me.caden2k3.infinitecampusapi.district;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
-public class DistrictInfo {
+@Data public class DistrictInfo {
     private int id;
     private Date dateCreated;
     private String districtAppName;

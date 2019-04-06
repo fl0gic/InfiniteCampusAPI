@@ -37,7 +37,8 @@ import java.util.ArrayList;
 
     public Student(String username, String password, InfiniteCampus core) throws InvalidCredentialsException, IOException, ParsingException {
         this.core = core;
-        distInfo = core.getDistrictInfo();
+        if (core != null)
+            distInfo = core.getDistrictInfo();
 
         //Ensure valid credentials.
         if (!core.checkCredentials(username, password))
