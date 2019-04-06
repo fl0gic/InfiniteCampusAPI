@@ -1,4 +1,4 @@
-import me.caden2k3.infinitecampusapi.InfiniteCampus;
+import me.caden2k3.infinitecampusapi.InfiniteCampusAPI;
 import me.caden2k3.infinitecampusapi.Student;
 import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
 import nu.xom.ParsingException;
@@ -33,7 +33,7 @@ public class StudentTest {
         final String password = userInfo[1];
         final String districtCode = "fngzxv";
 
-        final InfiniteCampus core = new InfiniteCampus(districtCode);
+        final InfiniteCampusAPI core = new InfiniteCampusAPI(districtCode);
         final Student student = new Student(username, password, core);
 
         Assert.assertTrue(student.getCalendars() != null);

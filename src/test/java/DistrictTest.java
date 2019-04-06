@@ -1,4 +1,4 @@
-import me.caden2k3.infinitecampusapi.InfiniteCampus;
+import me.caden2k3.infinitecampusapi.InfiniteCampusAPI;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class DistrictTest {
         final List<String> expectedDistrictCodes = Arrays.asList("zldqcb", "fngzxv");
 
         //Code for Douglas County School District, Colorado.
-        InfiniteCampus core = new InfiniteCampus(InfiniteCampus.searchDistricts("Douglas County", "CO").get(0).getDistrictCode());
+        InfiniteCampusAPI core = new InfiniteCampusAPI(InfiniteCampusAPI.searchDistricts("Douglas County", "CO").get(0).getDistrictCode());
 
         assertThat(core.getDistrictInfo().getDistrictName()).isEqualTo(expectedDistrictName);
         assertThat(core.getDistrictInfo().getDistrictBaseURL()).isEqualTo(expectedDistrictBaseURL);

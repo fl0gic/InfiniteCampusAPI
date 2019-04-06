@@ -1,86 +1,144 @@
 package me.caden2k3.infinitecampusapi;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Cleanup;
 import lombok.Getter;
+import me.caden2k3.infinitecampusapi.district.DistrictInfo;
+import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.ParsingException;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class InfiniteCampusAPI {
-    private static PrintWriter out;
+    private String cookies = "";
+    @Getter private DistrictInfo districtInfo;
 
-    @Getter private InfiniteCampusAPI instance;
+    /**
+     * Queries Infinite Campus for districts.
+     *
+     * @param districtName The name (or part of the name) of the district.
+     * @param stateCode The two letter code of the district's state.
+     * @return A list of districts returned by the query.
+     * @throws IOException Upon malformed URL.
+     */
+    public static List<DistrictInfo> searchDistricts(String districtName, String stateCode) throws IOException {
+        ArrayList<DistrictInfo> districts = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
 
-    public InfiniteCampusAPI() {
-        instance = this;
+        districtName = districtName.replace(" ", "%20");
+
+        String jsonReturn = readFrom("https://mobile.infinitecampus.com/mobile/searchDistrict?query=" + districtName + "&state=" + stateCode);
+
+        if (jsonReturn.contains("No results found")) {
+            return districts;
+        }
+
+        Map<String,List<Map>> dataMap = mapper.readValue(jsonReturn, new TypeReference<Map<String,List<Map>>>(){});
+
+        for (Map infoMap : dataMap.get("data")) {
+            DistrictInfo info = new DistrictInfo();
+            info.setId((Integer) infoMap.get("id"));
+            info.setDistrictName((String) infoMap.get("district_name"));
+            info.setDistrictAppName((String) infoMap.get("district_app_name"));
+            info.setDistrictBaseURL((String) infoMap.get("district_baseurl"));
+            info.setDistrictCode((String) infoMap.get("district_code"));
+            info.setStateCode((String) infoMap.get("state_code"));
+
+            districts.add(info);
+        }
+
+        return districts;
     }
 
-    public static void main(String[] args) throws Exception {
-        InfiniteCampusAPI main = new InfiniteCampusAPI();
-        File f = new File("grades.txt");
-        if (f.exists())
-            f.delete();
-
+    public InfiniteCampusAPI(String districtCode) {
         try {
-            out = new PrintWriter(new BufferedWriter(new FileWriter("grades.txt")));
-        } catch (IOException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            districtInfo = mapper.readValue(new URL("https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode=" + districtCode), DistrictInfo.class);
+        } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
-
-        System.out.println("Please enter your district code:");
-        String districtCode = main.getInput();
-
-        InfiniteCampus core = new InfiniteCampus(districtCode);
-        print("Found District Information:");
-        print("District: " + core.getDistrictInfo().getDistrictName());
-        print("State: " + core.getDistrictInfo().getStateCode());
-        print("Base URL: " + core.getDistrictInfo().getDistrictBaseURL());
-        print("District App Name: " + core.getDistrictInfo().getDistrictAppName());
-
-        print("Attempting login...");
-        System.out.println("Username: ");
-        String username = main.getInput();
-
-        System.out.println("Password: ");
-        String passwordString = main.getInput();
-        System.out.println(passwordString);
-
-        print("Logging into user " + username + "...");
-        boolean successfulLogin = core.checkCredentials(username, passwordString);
-        print(successfulLogin ? "Login success!" : "Login failed!");
-        if (!successfulLogin) {
-            print("\nPress any key to exit...");
-            System.in.read();
-            return;
-        }
-        print("\n");
-
-        Student student = new Student(username, passwordString, core);
-        print(student.getInfoString());
-
-        print("\n");
-
-        print(student.getClassbookManager().getInfoString());
-
-        out.close();
-
-        print("\nUser info dump successful!\nPress any key to exit...");
-        System.in.read();
     }
 
-    public static void print(String s) {
-        System.out.println(s);
-        out.println(s);
+    public Student getStudent(String username, String password) throws ParsingException, IOException, InvalidCredentialsException {
+        //Ensure valid credentials.
+        if (!checkCredentials(username, password))
+            throw new InvalidCredentialsException();
+
+        Builder builder = new Builder();
+
+        URL infoURL = new URL(districtInfo.getDistrictBaseURL() + "/prism?x=portal.PortalOutline&appName=" + districtInfo.getDistrictAppName());
+        Document doc = builder.build(new ByteArrayInputStream(getContent(infoURL, false).getBytes()));
+        Element root = doc.getRootElement();
+        return new Student(root
+                .getFirstChildElement("PortalOutline")
+                .getFirstChildElement("Family")
+                .getFirstChildElement("Student"));
     }
 
-    private String getInput() {
-        String inputString = "";
+    public boolean checkCredentials(String username, String password) {
         try {
-            BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-            inputString = bufferRead.readLine();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            URL loginURL = new URL(districtInfo.getDistrictBaseURL() + "/verify.jsp?nonBrowser=true&username=" + username + "&password=" + password + "&appName=" + districtInfo.getDistrictAppName());
+            String response = getContent(loginURL, true);
+            if (response.trim().equalsIgnoreCase("<authentication>success</authentication>"))
+                return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static String readFrom(String url) throws IOException {
+        @Cleanup InputStream is = new URL(url).openStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+
+    public String getContent(URL url, boolean alterCookies) throws IOException {
+        StringBuilder builder = new StringBuilder();
+
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestProperty("Cookie", cookies); //Retain our session
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+        String input;
+        while ((input = reader.readLine()) != null) {
+            builder.append(input).append("\n");
+        }
+        reader.close();
+
+        StringBuilder builder2 = new StringBuilder();
+        // find the cookies in the response header from the first request
+        List<String> cookieList = connection.getHeaderFields().get("Set-Cookie");
+        if (cookieList != null) {
+            for (String currentCookie : cookieList) {
+                if (builder2.length() > 0) {
+                    builder2.append("; ");
+                }
+
+                // only want the first part of the cookie header that has the value
+                String value = currentCookie.split(";")[0];
+                builder2.append(value);
+            }
         }
 
-        return inputString;
+        if (alterCookies)
+            cookies = builder2.toString();
+        return builder.toString();
     }
 }

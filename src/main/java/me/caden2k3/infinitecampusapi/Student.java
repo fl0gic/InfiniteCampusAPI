@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 @Getter @Setter public class Student {
-    private InfiniteCampus core;
+    private InfiniteCampusAPI core;
     private String studentNumber;
     private boolean hasSecurityRole = false;
     private String personID;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
     private DistrictInfo distInfo;
 
-    public Student(String username, String password, InfiniteCampus core) throws InvalidCredentialsException, IOException, ParsingException {
+    public Student(String username, String password, InfiniteCampusAPI core) throws InvalidCredentialsException, IOException, ParsingException {
         this.core = core;
         if (core != null)
             distInfo = core.getDistrictInfo();
@@ -74,7 +74,7 @@ import java.util.ArrayList;
         this(userElement, null);
     }
 
-    public Student(Element userElement, InfiniteCampus core) {
+    public Student(Element userElement, InfiniteCampusAPI core) {
         this.core = core;
         if (core != null)
             distInfo = core.getDistrictInfo();
