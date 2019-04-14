@@ -18,7 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-@Getter @Setter public class Student {
+@Getter @Setter
+public class Student {
     private InfiniteCampusAPI core;
     private String studentNumber;
     private boolean hasSecurityRole = false;
@@ -36,9 +37,11 @@ import java.util.ArrayList;
     private DistrictInfo distInfo;
 
     public Student(String username, String password, InfiniteCampusAPI core) throws InvalidCredentialsException, IOException, ParsingException {
+        if (core == null)
+            return;
+
         this.core = core;
-        if (core != null)
-            distInfo = core.getDistrictInfo();
+        distInfo = core.getDistrictInfo();
 
         //Ensure valid credentials.
         if (!core.checkCredentials(username, password))
@@ -49,8 +52,7 @@ import java.util.ArrayList;
         URL infoURL = new URL(distInfo.getDistrictBaseURL() + "/prism?x=portal.PortalOutline&appName=" + distInfo.getDistrictAppName());
         Document doc = builder.build(new ByteArrayInputStream(core.getContent(infoURL, false).getBytes()));
         Element root = doc.getRootElement();
-        Element studentElement = root
-                .getFirstChildElement("PortalOutline")
+        Element studentElement = root.getFirstChildElement("PortalOutline")
                 .getFirstChildElement("Family")
                 .getFirstChildElement("Student");
 
@@ -64,6 +66,7 @@ import java.util.ArrayList;
 
         for (int i = 0; i < studentElement.getChildElements("Calendar").size(); i++)
             calendars.add(new Calendar(studentElement.getChildElements("Calendar").get(i)));
+
         for (int i = 0; i < studentElement.getChildElements("Classbook").size(); i++)
             classbooks.add(new Classbook(studentElement.getChildElements("Classbook").get(i)));
 
@@ -93,7 +96,7 @@ import java.util.ArrayList;
             classbooks.add(new Classbook(userElement.getChildElements("Classbook").get(i)));
 
         if (calendars.size() > 0)
-             primaryCalendar = calendars.get(0);
+            primaryCalendar = calendars.get(0);
     }
 
     private String getPictureURL() {
@@ -114,15 +117,14 @@ import java.util.ArrayList;
         return new ClassbookManager(doc2.getRootElement().getFirstChildElement("SectionClassbooks"));
     }
 
-    //TODO: Load news items
     public String getInfoString() {
         StringBuilder userInfo = new StringBuilder(
                 "Information for " + firstName + " " + middleName + " " + lastName + ":" +
-                "\nStudent Number: " + studentNumber +
-                "\nPerson ID: " + personID +
-                "\nPicture URL: " + getPictureURL() +
-                "\nIs Guardian? " + isGuardian +
-                "\n\n===Calendars===");
+                        "\nStudent Number: " + studentNumber +
+                        "\nPerson ID: " + personID +
+                        "\nPicture URL: " + getPictureURL() +
+                        "\nIs Guardian? " + isGuardian +
+                        "\n\n===Calendars===");
 
         for (Calendar c : calendars)
             userInfo.append("\n").append(c.getInfoString());
