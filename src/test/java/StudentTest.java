@@ -9,6 +9,7 @@ import util.TestUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author Caden Kriese
@@ -23,7 +24,8 @@ public class StudentTest {
     @BeforeSuite
     public void before() throws IOException {
         //Data should be formatted 'username-password'
-        userInfo = TestUtils.readFile(new File(getClass().getClassLoader().getResource("test-credentials.txt").getFile()))
+        userInfo = TestUtils
+                .readFile(new File(Objects.requireNonNull(getClass().getClassLoader().getResource("test-credentials.txt")).getFile()))
                 .replace("\n", "").split("-");
     }
 
