@@ -27,7 +27,7 @@ public class InfiniteCampusAPI {
      * Queries Infinite Campus for districts.
      *
      * @param districtName The name (or part of the name) of the district.
-     * @param stateCode The two letter code of the district's state.
+     * @param stateCode    The two letter code of the district's state.
      * @return A list of districts returned by the query.
      * @throws IOException Upon malformed URL.
      */
@@ -43,7 +43,8 @@ public class InfiniteCampusAPI {
             return districts;
         }
 
-        Map<String,List<Map>> dataMap = mapper.readValue(jsonReturn, new TypeReference<Map<String,List<Map>>>(){});
+        Map<String, List<Map>> dataMap = mapper.readValue(jsonReturn, new TypeReference<Map<String, List<Map>>>() {
+        });
 
         for (Map infoMap : dataMap.get("data")) {
             DistrictInfo info = new DistrictInfo();
@@ -76,10 +77,10 @@ public class InfiniteCampusAPI {
 
         URL infoURL = new URL(districtInfo.getDistrictBaseURL() + "/prism?x=portal.PortalOutline&appName=" + districtInfo.getDistrictAppName());
         String content = new Builder().build(new ByteArrayInputStream(getContent(infoURL, false).getBytes()))
-                .getRootElement()
-                .getFirstChildElement("PortalOutline")
-                .getFirstChildElement("Family")
-                .getFirstChildElement("Student").toXML();
+                                 .getRootElement()
+                                 .getFirstChildElement("PortalOutline")
+                                 .getFirstChildElement("Family")
+                                 .getFirstChildElement("Student").toXML();
 
         return mapper.readValue(content, Student.class);
     }

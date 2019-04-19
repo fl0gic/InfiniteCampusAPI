@@ -21,16 +21,14 @@ public class StudentTest {
     //That file is ignored for obvious reasons, you must put in your own credentials if you wish to run this test.
     private String[] userInfo;
 
-    @BeforeSuite
-    public void before() throws IOException {
+    @BeforeSuite public void before() throws IOException {
         //Data should be formatted 'username-password'
         userInfo = TestUtils
                 .readFile(new File(Objects.requireNonNull(getClass().getClassLoader().getResource("test-credentials.txt")).getFile()))
                 .replace("\n", "").split("-");
     }
 
-    @Test
-    public void retrieveStudentInfo() throws IOException, InvalidCredentialsException, ParsingException {
+    @Test public void retrieveStudentInfo() throws IOException, InvalidCredentialsException, ParsingException {
         final String username = userInfo[0];
         final String password = userInfo[1];
         final String districtCode = "fngzxv";
