@@ -2,13 +2,12 @@ package me.caden2k3.infinitecampusapi;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.Cleanup;
 import lombok.Getter;
 import me.caden2k3.infinitecampusapi.district.DistrictInfo;
 import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
 import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
 import nu.xom.ParsingException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -22,6 +21,7 @@ import java.util.Map;
 public class InfiniteCampusAPI {
     private String cookies = "";
     @Getter private DistrictInfo districtInfo;
+    @Getter private XmlMapper mapper = new XmlMapper();
 
     /**
      * Queries Infinite Campus for districts.
@@ -69,20 +69,19 @@ public class InfiniteCampusAPI {
         }
     }
 
-    public Student getStudent(String username, String password) throws ParsingException, IOException, InvalidCredentialsException {
+    public Student getStudent(String username, String password) throws IOException, InvalidCredentialsException, ParsingException {
         //Ensure valid credentials.
         if (!checkCredentials(username, password))
             throw new InvalidCredentialsException();
 
-        Builder builder = new Builder();
-
         URL infoURL = new URL(districtInfo.getDistrictBaseURL() + "/prism?x=portal.PortalOutline&appName=" + districtInfo.getDistrictAppName());
-        Document doc = builder.build(new ByteArrayInputStream(getContent(infoURL, false).getBytes()));
-        Element root = doc.getRootElement();
-        return new Student(root
+        String content = new Builder().build(new ByteArrayInputStream(getContent(infoURL, false).getBytes()))
+                .getRootElement()
                 .getFirstChildElement("PortalOutline")
                 .getFirstChildElement("Family")
-                .getFirstChildElement("Student"));
+                .getFirstChildElement("Student").toXML();
+
+        return mapper.readValue(content, Student.class);
     }
 
     public boolean checkCredentials(String username, String password) {

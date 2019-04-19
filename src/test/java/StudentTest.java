@@ -1,6 +1,5 @@
 import me.caden2k3.infinitecampusapi.InfiniteCampusAPI;
 import me.caden2k3.infinitecampusapi.Student;
-import me.caden2k3.infinitecampusapi.classbook.Classbook;
 import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
 import nu.xom.ParsingException;
 import org.testng.Assert;
@@ -29,19 +28,17 @@ public class StudentTest {
     }
 
     @Test
-    public void retrieveStudentInfo() throws ParsingException, IOException, InvalidCredentialsException {
+    public void retrieveStudentInfo() throws IOException, InvalidCredentialsException, ParsingException {
         final String username = userInfo[0];
         final String password = userInfo[1];
         final String districtCode = "fngzxv";
 
         final InfiniteCampusAPI core = new InfiniteCampusAPI(districtCode);
-        final Student student = new Student(username, password, core);
+        final Student student = core.getStudent(username, password);
 
         Assert.assertTrue(student.getCalendars() != null);
         Assert.assertTrue(student.getClassbooks() != null);
         Assert.assertTrue(student.getPrimaryCalendar() != null);
-        Assert.assertTrue(student.getDistInfo() != null);
-        Assert.assertTrue(student.getClassbookManager() != null);
         Assert.assertTrue(student.getInfoString() != null);
     }
 }

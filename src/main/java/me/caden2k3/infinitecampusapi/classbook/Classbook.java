@@ -2,7 +2,6 @@ package me.caden2k3.infinitecampusapi.classbook;
 
 import lombok.Getter;
 import lombok.Setter;
-import nu.xom.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,17 +16,6 @@ public class Classbook {
     private String teacherDisplay;
 
     private ArrayList<ClassbookTask> tasks = new ArrayList<>();
-
-    public Classbook(Element classbook) {
-        termName = classbook.getAttributeValue("termName");
-        courseNumber = classbook.getAttributeValue("courseNumber");
-        courseName = classbook.getAttributeValue("courseName");
-        sectionNumber = classbook.getAttributeValue("sectionNumber");
-        teacherDisplay = classbook.getAttributeValue("teacherDisplay");
-
-        for (int i = 0; i < classbook.getFirstChildElement("tasks").getChildElements("ClassbookTask").size(); i++)
-            tasks.add(new ClassbookTask(classbook.getFirstChildElement("tasks").getChildElements("ClassbookTask").get(i)));
-    }
 
     /**
      * @return The weighted average of all tasks in the class.
