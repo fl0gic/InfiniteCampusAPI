@@ -1,5 +1,6 @@
 import me.caden2k3.infinitecampusapi.InfiniteCampusAPI;
 import me.caden2k3.infinitecampusapi.Student;
+import me.caden2k3.infinitecampusapi.classbook.Classbook;
 import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
 import nu.xom.ParsingException;
 import org.testng.Assert;
@@ -23,8 +24,8 @@ public class StudentTest {
     @BeforeSuite
     public void before() throws IOException {
         //Data should be formatted 'username-password'
-        userInfo = TestUtils.readFile(
-                new File(getClass().getClassLoader().getResource("test-credentials.txt").getFile())).replace("\n", "").split("-");
+        userInfo = TestUtils.readFile(new File(getClass().getClassLoader().getResource("test-credentials.txt").getFile()))
+                .replace("\n", "").split("-");
     }
 
     @Test

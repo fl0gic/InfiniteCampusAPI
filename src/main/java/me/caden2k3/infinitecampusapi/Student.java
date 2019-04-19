@@ -110,8 +110,8 @@ public class Student {
                 "/prism?&x=portal.PortalClassbook-getClassbookForAllSections" +
                 "&mode=classbook" +
                 "&personID=" + personID +
-                "&structureID=" + calendars.get(0).getSchedules().get(0).getId() +
-                "&calendarID=" + calendars.get(0).getCalendarID());
+                "&structureID=" + primaryCalendar.getSchedules().get(0).getId() +
+                "&calendarID=" + primaryCalendar.getCalendarID());
 
         Document doc2 = builder.build(new ByteArrayInputStream(core.getContent(infoURL, false).getBytes()));
         return new ClassbookManager(doc2.getRootElement().getFirstChildElement("SectionClassbooks"));

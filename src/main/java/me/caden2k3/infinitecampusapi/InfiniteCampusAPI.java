@@ -127,9 +127,8 @@ public class InfiniteCampusAPI {
         List<String> cookieList = connection.getHeaderFields().get("Set-Cookie");
         if (cookieList != null) {
             for (String currentCookie : cookieList) {
-                if (builder2.length() > 0) {
+                if (builder2.length() > 0)
                     builder2.append("; ");
-                }
 
                 // only want the first part of the cookie header that has the value
                 String value = currentCookie.split(";")[0];
