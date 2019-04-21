@@ -36,9 +36,8 @@ public class StudentTest {
         final InfiniteCampusAPI core = new InfiniteCampusAPI(districtCode);
         final Student student = core.getStudent(username, password);
 
-        Assert.assertTrue(student.getCalendars() != null);
-        Assert.assertTrue(student.getClassbooks() != null);
-        Assert.assertTrue(student.getPrimaryCalendar() != null);
+        Assert.assertTrue(student.getCalendar() != null);
+        Assert.assertTrue(student.getCustomTab() != null);
         Assert.assertTrue(student.getInfoString() != null);
     }
 }

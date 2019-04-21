@@ -39,12 +39,10 @@ public class InfiniteCampusAPI {
 
         String jsonReturn = readFrom("https://mobile.infinitecampus.com/mobile/searchDistrict?query=" + districtName + "&state=" + stateCode);
 
-        if (jsonReturn.contains("No results found")) {
+        if (jsonReturn.contains("No results found"))
             return districts;
-        }
 
-        Map<String, List<Map>> dataMap = mapper.readValue(jsonReturn, new TypeReference<Map<String, List<Map>>>() {
-        });
+        Map<String, List<Map>> dataMap = mapper.readValue(jsonReturn, new TypeReference<Map<String, List<Map>>>(){});
 
         for (Map infoMap : dataMap.get("data")) {
             DistrictInfo info = new DistrictInfo();
@@ -81,6 +79,8 @@ public class InfiniteCampusAPI {
                                  .getFirstChildElement("PortalOutline")
                                  .getFirstChildElement("Family")
                                  .getFirstChildElement("Student").toXML();
+
+        System.out.println(content);
 
         return mapper.readValue(content, Student.class);
     }

@@ -1,5 +1,7 @@
 package me.caden2k3.infinitecampusapi.classbook;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,13 +9,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter @Setter
+@Getter @Setter @JsonIgnoreProperties(ignoreUnknown = true)
 public class Classbook {
     private String termName;
-    private String courseNumber;
     private String courseName;
-    private String sectionNumber;
-    private String teacherDisplay;
+    @JsonProperty("teacherDisplay")
+    private String teacherName;
+    private int courseNumber;
+    private int courseID;
+    private int sectionNumber;
+    private int sectionID;
 
     private ArrayList<ClassbookTask> tasks = new ArrayList<>();
 
@@ -33,13 +38,5 @@ public class Classbook {
         }
 
         return num / denom;
-    }
-
-    public String getInfoString() {
-        StringBuilder str = new StringBuilder("\nTasks for " + courseName + ", with teacher " + teacherDisplay + " and class ID " + courseNumber + ", " + termName);
-
-        for (ClassbookTask t : tasks)
-            str.append("\n").append(t.getInfoString());
-        return str.toString();
     }
 }

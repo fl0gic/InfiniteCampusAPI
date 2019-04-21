@@ -1,38 +1,32 @@
 package me.caden2k3.infinitecampusapi;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.caden2k3.infinitecampusapi.calendar.Calendar;
-import me.caden2k3.infinitecampusapi.classbook.Classbook;
-
-import java.util.ArrayList;
+import me.caden2k3.infinitecampusapi.calendar.FutureCalendar;
 
 @Getter @Setter
 public class Student {
-    private InfiniteCampusAPI core;
     private String studentNumber;
-    private boolean hasSecurityRole = false;
+    private boolean hasSecurityRole;
     private String personID;
     private String lastName;
     private String firstName;
     private String middleName;
     private String isGuardian;
-    private Calendar primaryCalendar;
-
-    private ArrayList<Calendar> calendars = new ArrayList<>();
-    private ArrayList<Classbook> classbooks = new ArrayList<>();
+    @JsonProperty("FutureCalendar")
+    private FutureCalendar futureCalendar;
+    @JsonProperty("Calendar")
+    private Calendar calendar;
+    @JsonProperty("CustomTab")
+    private CustomTab customTab;
 
     public String getInfoString() {
-        StringBuilder userInfo = new StringBuilder(
-                "Information for " + firstName + " " + middleName + " " + lastName + ":" +
-                        "\nStudent Number: " + studentNumber +
-                        "\nPerson ID: " + personID +
-                        "\nIs Guardian? " + isGuardian +
-                        "\n\n===Calendars===");
-
-        for (Calendar c : calendars)
-            userInfo.append("\n").append(c.getInfoString());
-
-        return userInfo.toString();
+        return "Information for " + firstName + " " + middleName + " " + lastName + ":" +
+                                  "\nStudent Number: " + studentNumber +
+                                  "\nPerson ID: " + personID +
+                                  "\nIs Guardian? " + isGuardian +
+                                  "\n\n===Calendars===" + "\n" + calendar.getInfoString();
     }
 }
