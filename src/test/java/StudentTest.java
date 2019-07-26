@@ -36,6 +36,11 @@ public class StudentTest {
         final InfiniteCampusAPI core = new InfiniteCampusAPI(districtCode);
         final Student student = core.getStudent(username, password);
 
+        InfiniteCampusAPI.printDebug("STUDENT FULL NAME\t|\t" + student.getFirstName() + " " + student.getMiddleName() + " " + student.getLastName());
+        InfiniteCampusAPI.printDebug("STUDENT NUMBER\t|\t" + student.getStudentNumber());
+        InfiniteCampusAPI.printDebug("STUDENT CALENDAR END YEAR\t|\t" + student.getCalendar().getEndYear());
+        InfiniteCampusAPI.printDebug("STUDENT INFO STRING\t|\t" + student.getInfoString());
+
         Assert.assertTrue(student.getCalendar() != null);
         Assert.assertTrue(student.getCustomTab() != null);
         Assert.assertTrue(student.getInfoString() != null);

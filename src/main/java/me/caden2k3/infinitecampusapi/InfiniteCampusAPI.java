@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.extern.java.Log;
 import me.caden2k3.infinitecampusapi.district.DistrictInfo;
 import me.caden2k3.infinitecampusapi.exception.InvalidCredentialsException;
 import nu.xom.Builder;
@@ -18,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class InfiniteCampusAPI {
+@Log public class InfiniteCampusAPI {
     private String cookies = "";
+    private static final boolean DEBUG = false;
     @Getter private DistrictInfo districtInfo;
     @Getter private XmlMapper mapper = new XmlMapper();
 
@@ -80,8 +82,6 @@ public class InfiniteCampusAPI {
                                  .getFirstChildElement("Family")
                                  .getFirstChildElement("Student").toXML();
 
-        System.out.println(content);
-
         return mapper.readValue(content, Student.class);
     }
 
@@ -139,5 +139,11 @@ public class InfiniteCampusAPI {
         if (alterCookies)
             cookies = builder2.toString();
         return builder.toString();
+    }
+
+    public static void printDebug(String debugMessage) {
+        if (DEBUG) {
+            log.info(debugMessage);
+        }
     }
 }

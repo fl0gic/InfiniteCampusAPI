@@ -13,8 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Created on 2019-04-03.
  */
 public class DistrictTest {
-    @Test
-    public void retrieveDistrictInfo() throws IOException {
+    @Test public void retrieveDistrictInfo() throws IOException {
         final String expectedDistrictName = "Douglas County School";
         final String expectedDistrictBaseURL = "https://campus.dcsdk12.org/icprod/";
         //For some reason Douglas County has two ids and two codes??
@@ -23,6 +22,11 @@ public class DistrictTest {
 
         //Code for Douglas County School District, Colorado.
         InfiniteCampusAPI core = new InfiniteCampusAPI(InfiniteCampusAPI.searchDistricts("Douglas County", "CO").get(0).getDistrictCode());
+
+        InfiniteCampusAPI.printDebug("DISTRICT NAME\t|\t" + core.getDistrictInfo().getDistrictName());
+        InfiniteCampusAPI.printDebug("DISTRICT BASE URL\t|\t" + core.getDistrictInfo().getDistrictBaseURL());
+        InfiniteCampusAPI.printDebug("DISTRICT ID\t|\t" + core.getDistrictInfo().getId());
+        InfiniteCampusAPI.printDebug("DISTRICT CODE\t|\t" + core.getDistrictInfo().getDistrictCode());
 
         assertThat(core.getDistrictInfo().getDistrictName()).isEqualTo(expectedDistrictName);
         assertThat(core.getDistrictInfo().getDistrictBaseURL()).isEqualTo(expectedDistrictBaseURL);
